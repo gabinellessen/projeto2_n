@@ -50,6 +50,11 @@ public class UsuarioController {
         usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}")
+public UsuarioResponseDto atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioRequestDto dto) {
+    Usuario usuarioAtualizado = usuarioService.atualizar(id, dto);
+    return toResponseDTO(usuarioAtualizado);
+}
 
     // Conversão manual entre DTO e entidade
     private UsuarioResponseDto toResponseDTO(Usuario usuario) {
