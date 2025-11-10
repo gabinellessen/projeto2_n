@@ -3,16 +3,17 @@ package projeto.projeto_nuvem.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.projeto_nuvem.Usuario;
-import projeto.projeto_nuvem.repository.UsuarioRepository;
+import projeto.projeto_nuvem.repository.MeuRepositorioEmMemoria;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private MeuRepositorioEmMemoria usuarioRepository;
 
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
@@ -29,11 +30,14 @@ public class UsuarioService {
     public void deletar(Long id) {
         usuarioRepository.deleteById(id);
     }
-    public Optional<Usuario> atualizarUsuario(Long id, Usuario usuarioAtualizado) {
-        return usuarioRepository.findById(id).map(usuario -> {
-            usuario.setNome(usuarioAtualizado.getNome());
-            usuario.setEmail(usuarioAtualizado.getEmail());
-            return usuarioRepository.save(usuario);
-        });
+
+    public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
+        Optional<Usuario> existente = usuarioRepository.findById(id);
+        if (existente.isPresent()) {
+            usuarioAtualizado.setId(id);
+            return usuarioRepository.save(usuarioAtualizado);
+        } else {
+            throw new NoSuchElementException("Usuário não encontrado");
+        }
     }
 }

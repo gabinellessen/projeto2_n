@@ -7,7 +7,7 @@ import projeto.projeto_nuvem.dto.UsuarioResponseDto;
 import projeto.projeto_nuvem.Usuario;
 import projeto.projeto_nuvem.service.UsuarioService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,10 +51,10 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/{id}")
-public UsuarioResponseDto atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioRequestDto dto) {
-    Usuario usuarioAtualizado = usuarioService.atualizar(id, dto);
-    return toResponseDTO(usuarioAtualizado);
-}
+    public void atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioRequestDto dto) {
+        Usuario usuario = toEntity(dto); // Converte o DTO para entidade
+        usuarioService.atualizar(id, usuario);
+    }
 
     // Conversão manual entre DTO e entidade
     private UsuarioResponseDto toResponseDTO(Usuario usuario) {
